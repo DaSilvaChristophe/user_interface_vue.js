@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <title>Vue Project - Exercice Pratique</title>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -10,6 +8,8 @@
     <link rel="icon" href="./assets/img/vueLogo.png" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
     <link href="./assets/style/style.css" rel="stylesheet" />
+  
+    <title>Vue V3 | Interface Users - Exercice Pratique</title>
   </head>
 
   <body>
@@ -17,6 +17,7 @@
       <nav>
         <div class="nav-container">
           <div id="logo">
+            <!-- Router Link -->
             <router-link to="/"> 
               <img src="./assets/img/wish-logo-800.png" alt="logo" />
             </router-link>
@@ -42,23 +43,74 @@
           </ul>
         </div>
       </nav>
-      
+
+      <!-- Router view -->
       <router-view></router-view>
     
     </div>
-
+    <!-- x-template pour route avec l'id home -->
     <script type="text/x-template" id="home">
       <div class="home-container">
         <h1>Articles</h1>
-        <!-- search-display -->
+        
+        <!-- search display -->
+        <!-- v-model = relie élément -->
+        <input v-model="searchKey" type="search" id="search" placeholder="Rechercher" autocomplete="off">
+        <span v-if="searchKey && filteredList.length >= 1">
+          {{ filteredList.length }} résultat<span v-if="filteredList.length >= 2">s</span>
+        </span>
+        
+        <!-- cards display -->
+        <div class="card-cart-container">
+          <div class="card-container">
+            <div v-for="product in filteredList" class="card">
+              <div class="img-container">
+                <!-- IMG = v-bind:src pour img -->
+                <img v-bind:src="product.img" alt="">
+              </div>
+              <div class="card-text">
+                <h3>{{ product.description }}</h3>
+                <span>{{ product.price }}€</span>
+              </div>
+              <!-- icons -->
+              <div class="card-icons">
+                <div class="like-container">
+                  <input 
+                  type="checkbox"
+                  name="checkbox"
+                  v-bind:id="product.id"
+                  :value="product.id"
+                  v-model="liked"
+                  @click="setLikeCookie()"
+                  />
+                  <label v-bind:for="product.id">
+                    <i class="fas fa-heart"></i>
+                  </label>
+                </div>
 
-        <!-- card-display -->
-
+                <div class="add-to-cart">
+                  <button>
+                    <i class="fas fa-shopping-cart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+              <!-- no result message -->
+              <div v-if="filteredList.length == []" class="no-result">
+                <h3>Désolé</h3>
+                <p>Aucun résultat trouvé</p>
+              </div>
+          </div>
+        </div>
       </div>
     </script>
     
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <!-- Vue V3 -->
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- Vue Router -->
+    <script src="https://unpkg.com/vue-router@4"></script>
+
     <script src="./assets/js/vue.js"></script>
     <script src="./assets/js/script.js"></script>
 
