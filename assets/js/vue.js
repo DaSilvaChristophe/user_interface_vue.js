@@ -1,5 +1,4 @@
 
-
 // Components
 
 const Home = {
@@ -9,7 +8,7 @@ const Home = {
         return{
             // data (BDD)
             products : [
-                { id: 1, description: "Quarz Luxe", price: 12, img: './assets/img/quarz-luxe.JPG'},
+                { id: 1, description: "Quarz Luxe", price: 12, img: './assets/img/quarz-luxe.JPG', boolean: true},
                 { id: 2, description: 'Curren Business', price: 20, img: 'assets/img/curren-business.JPG'},
                 { id: 3, description: 'Curren Sport', price: 5, img: 'assets/img/curren-sport.JPG'},
                 { id: 4, description: 'Jaragar Racing', price: 8, img: 'assets/img/jaragar-racing.JPG'},
@@ -24,6 +23,7 @@ const Home = {
             ],
             searchKey: '',
             liked: [],
+            cart: [],
         }
     },
     // computed = surveillance temp réel
@@ -36,7 +36,21 @@ const Home = {
         getLikeCookie(){
             let cookieValue = JSON.parse(localStorage.getItem('like'));
             cookieValue == null ? this.liked = [] : this.liked = cookieValue
-        }
+        },
+        cartTotalAmount(){
+            let total = 0;
+            for (let item in this.cart){
+                total = total + (this.cart[item].quantity * this.cart[item].price)
+            }
+            return total;
+        },
+        itemTotalAmount(){
+            let itemTotal = 0;
+            for (let item in this.cart){
+                itemTotal = itemTotal + (this.cart[item].quantity)
+            }
+            return itemTotal;
+        },
     },
     // methods = au actions 
     methods:{
@@ -46,7 +60,39 @@ const Home = {
                 localStorage.setItem('like', JSON.stringify(this.liked));
                 }, 300)
             })
+        },
+        addToCart(product){
+            // check if already in array
+            for(let i = 0; i < this.cart.length; i++){
+                if(this.cart[i].id === product.id){
+                    return this.cart[i].quantity++
+                }
+            }
+            this.cart.push({
+                id: product.id ,
+                img: product.img,
+                description: product.description ,
+                price: product.price,
+                quantity: 1,
+            })
+        },
+        cartPlusOne(product){
+            product.quantity = product.quantity + 1;
+        },
+        cartMinusOne(product, id){
+            if(product.quantity == 1){
+                this.cartRemoveItem(id);
+                console.log(this.cartRemoveItem(id))
+            } else {
+                product.quantity = product.quantity - 1
+            }
+        },
+        cartRemoveItem(id){
+            
+        // A travaillé Vue V3 
+            
         }
+
     },
     mounted: () => {
         this.getLikeCookie;
@@ -85,7 +131,6 @@ const router = new VueRouter.createRouter ({
 });
 
 // Mise en place de vue with router
-
 const app = Vue.createApp({})
 
 app.use(router)
